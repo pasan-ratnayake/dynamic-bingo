@@ -1,0 +1,24 @@
+{
+  "Version": 1,
+  "Hash": "0CgtsgMAxOWtA+jp1YWbexvVl1x+Ivt2h1B0KO2Qw0A=",
+  "Source": "DynamicBingo.WebApi.Tests",
+  "BasePath": "_content/DynamicBingo.WebApi.Tests",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.WebApi/DynamicBingo.WebApi.csproj",
+      "Version": 2,
+      "Source": "DynamicBingo.WebApi",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

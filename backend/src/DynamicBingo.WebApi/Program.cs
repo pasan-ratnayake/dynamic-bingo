@@ -1,0 +1,62 @@
+using DynamicBingo.Application.Interfaces;
+using DynamicBingo.Application.Services;
+using DynamicBingo.Infrastructure.Data;
+using DynamicBingo.Infrastructure.Repositories;
+using DynamicBingo.Infrastructure.Services;
+using DynamicBingo.WebApi.Hubs;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<DynamicBingoDbContext>(options =>
+    options.UseInMemoryDatabase("DynamicBingo"));
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IFriendshipRepository, FriendshipRepository>();
+builder.Services.AddScoped<IOpenChallengeRepository, OpenChallengeRepository>();
+builder.Services.AddScoped<IBanRepository, BanRepository>();
+builder.Services.AddScoped<IAuthMagicLinkRepository, AuthMagicLinkRepository>();
+
+builder.Services.AddScoped<ITimeProvider, DynamicBingo.Infrastructure.Services.TimeProvider>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddScoped<IRealtimeTransport, SignalRRealtimeTransport>();
+
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<GameEngineService>();
+
+builder.Services.AddSignalR();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseCors("AllowAll");
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<DynamicBingo.WebApi.Hubs.LobbyHub>("/hubs/lobby");
+app.MapHub<DynamicBingo.WebApi.Hubs.GameHub>("/hubs/game");
+
+app.Run();

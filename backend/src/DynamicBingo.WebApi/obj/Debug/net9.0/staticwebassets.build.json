@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "VomYpXK7PeIC4W3c1AwxsnP1H0MlYBhm47DBT+hQhzY=",
+  "Source": "DynamicBingo.WebApi",
+  "BasePath": "_content/DynamicBingo.WebApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

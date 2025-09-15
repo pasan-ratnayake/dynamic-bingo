@@ -1,0 +1,15 @@
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/bin/Debug/net9.0/DynamicBingo.Application.deps.json
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/bin/Debug/net9.0/DynamicBingo.Application.dll
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/bin/Debug/net9.0/DynamicBingo.Application.pdb
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/bin/Debug/net9.0/DynamicBingo.Domain.dll
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/bin/Debug/net9.0/DynamicBingo.Domain.pdb
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicBingo.Application.csproj.AssemblyReference.cache
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicBingo.Application.GeneratedMSBuildEditorConfig.editorconfig
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicBingo.Application.AssemblyInfoInputs.cache
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicBingo.Application.AssemblyInfo.cs
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicBingo.Application.csproj.CoreCompileInputs.cache
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicB.FC7C45AE.Up2Date
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicBingo.Application.dll
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/refint/DynamicBingo.Application.dll
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/DynamicBingo.Application.pdb
+/home/ubuntu/repos/dynamic-bingo/backend/src/DynamicBingo.Application/obj/Debug/net9.0/ref/DynamicBingo.Application.dll
