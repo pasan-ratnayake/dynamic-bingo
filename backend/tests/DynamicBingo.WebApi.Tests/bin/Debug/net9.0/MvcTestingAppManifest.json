@@ -1,6 +1,0 @@
-{
-  "DynamicBingo.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/ubuntu\/repos\/dynamic-bingo\/backend\/src\/DynamicBingo.Application",
-  "DynamicBingo.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/ubuntu\/repos\/dynamic-bingo\/backend\/src\/DynamicBingo.Domain",
-  "DynamicBingo.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/ubuntu\/repos\/dynamic-bingo\/backend\/src\/DynamicBingo.Infrastructure",
-  "DynamicBingo.WebApi, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/ubuntu\/repos\/dynamic-bingo\/backend\/src\/DynamicBingo.WebApi"
-}
