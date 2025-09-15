@@ -48,6 +48,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<DynamicBingoDbContext>();
+        var seeder = new DbSeeder(context);
+        await seeder.SeedAsync();
+    }
 }
 
 app.UseCors("AllowAll");
