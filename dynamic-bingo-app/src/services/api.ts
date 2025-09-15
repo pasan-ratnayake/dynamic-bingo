@@ -63,6 +63,13 @@ class ApiService {
     });
   }
 
+  async createGuest(displayName: string): Promise<{ user: any; token: string }> {
+    return this.request('/guests', {
+      method: 'POST',
+      body: JSON.stringify({ displayName }),
+    });
+  }
+
   async convertGuest(email: string): Promise<void> {
     await this.request('/guests/convert', {
       method: 'POST',

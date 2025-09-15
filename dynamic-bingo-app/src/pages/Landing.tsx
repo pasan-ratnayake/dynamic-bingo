@@ -30,17 +30,21 @@ export function Landing() {
     }
   };
 
-  const handlePlayAsGuest = () => {
-    const guestUser = {
-      id: `guest_${Date.now()}`,
-      displayName: `Guest${Math.floor(Math.random() * 1000)}`,
-      isGuest: true,
-      createdAt: new Date().toISOString(),
-      lastActiveAt: new Date().toISOString(),
-    };
-    
-    setUser(guestUser);
-    navigate('/lobby');
+  const handlePlayAsGuest = async () => {
+    setIsLoading(true);
+    try {
+      const guestName = `Guest${Math.floor(Math.random() * 1000)}`;
+      const response = await apiService.createGuest(guestName);
+      
+      setUser(response.user);
+      localStorage.setItem('auth-token', response.token);
+      localStorage.setItem('user-id', response.user.id);
+      navigate('/lobby');
+    } catch (error) {
+      console.error('Error creating guest account:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (emailSent) {
@@ -143,8 +147,16 @@ export function Landing() {
               onClick={handlePlayAsGuest}
               variant="outline" 
               className="w-full"
+              disabled={isLoading}
             >
-              Continue as Guest
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                'Continue as Guest'
+              )}
             </Button>
           </CardContent>
         </Card>

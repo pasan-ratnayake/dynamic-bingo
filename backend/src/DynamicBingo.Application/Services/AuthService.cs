@@ -75,6 +75,21 @@ public class AuthService
         return await _userRepository.CreateAsync(user);
     }
 
+    public async Task<(User User, string Token)> CreateGuestWithTokenAsync(string displayName)
+    {
+        var user = User.CreateGuest(displayName);
+        var createdUser = await _userRepository.CreateAsync(user);
+        var token = GenerateAccessToken(createdUser);
+        return (createdUser, token);
+    }
+
+    private string GenerateAccessToken(User user)
+    {
+        var tokenData = $"{user.Id}:{user.DisplayName}:{DateTime.UtcNow:O}";
+        var bytes = Encoding.UTF8.GetBytes(tokenData);
+        return Convert.ToBase64String(bytes);
+    }
+
     public async Task<bool> ConvertGuestToRegisteredAsync(Guid guestId, string email, string? ipAddress = null, string? userAgent = null)
     {
         var user = await _userRepository.GetByIdAsync(guestId);
