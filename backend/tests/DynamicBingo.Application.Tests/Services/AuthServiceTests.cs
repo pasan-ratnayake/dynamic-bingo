@@ -35,10 +35,9 @@ public class AuthServiceTests
 
         var result = await _authService.CreateGuestAsync(displayName);
 
-        Assert.NotNull(result.User);
-        Assert.True(result.User.IsGuest);
-        Assert.Equal(displayName, result.User.DisplayName);
-        Assert.NotNull(result.Token);
+        Assert.NotNull(result);
+        Assert.True(result.IsGuest);
+        Assert.Equal(displayName, result.DisplayName);
         _userRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<User>()), Times.Once);
     }
 
@@ -78,7 +77,7 @@ public class AuthServiceTests
     {
         var token = "valid-token";
         var user = User.CreateRegistered("test@example.com", "TestUser");
-        var magicLink = AuthMagicLink.Create(user.Id, token, DateTime.UtcNow.AddHours(1));
+        var magicLink = AuthMagicLink.Create(user.Id, "hashed-token", TimeSpan.FromHours(1));
         
         _magicLinkRepositoryMock.Setup(x => x.GetByTokenHashAsync(It.IsAny<string>()))
             .ReturnsAsync(magicLink);
@@ -88,9 +87,8 @@ public class AuthServiceTests
 
         var result = await _authService.ConsumeMagicLinkAsync(token);
 
-        Assert.NotNull(result.User);
-        Assert.Equal(user.Id, result.User.Id);
-        Assert.NotNull(result.Token);
+        Assert.NotNull(result);
+        Assert.Equal(user.Id, result.Id);
         _magicLinkRepositoryMock.Verify(x => x.UpdateAsync(magicLink), Times.Once);
     }
 
@@ -99,7 +97,7 @@ public class AuthServiceTests
     {
         var token = "expired-token";
         var user = User.CreateRegistered("test@example.com", "TestUser");
-        var magicLink = AuthMagicLink.Create(user.Id, token, DateTime.UtcNow.AddHours(-1));
+        var magicLink = AuthMagicLink.Create(user.Id, "hashed-token", TimeSpan.FromHours(-1));
         
         _magicLinkRepositoryMock.Setup(x => x.GetByTokenHashAsync(It.IsAny<string>()))
             .ReturnsAsync(magicLink);
@@ -111,7 +109,7 @@ public class AuthServiceTests
     }
 
     [Fact]
-    public async Task ConvertGuestToRegisteredAsync_ShouldUpdateUserAndSendMagicLink()
+    public async Task ConvertGuestToRegisteredAsync_ShouldSendMagicLink()
     {
         var guestId = Guid.NewGuid();
         var email = "test@example.com";
@@ -123,12 +121,26 @@ public class AuthServiceTests
             .ReturnsAsync((User?)null);
         _timeProviderMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
-        await _authService.ConvertGuestToRegisteredAsync(guestId, email);
+        var result = await _authService.ConvertGuestToRegisteredAsync(guestId, email);
 
-        Assert.False(guest.IsGuest);
-        Assert.Equal(email, guest.Email);
-        _userRepositoryMock.Verify(x => x.UpdateAsync(guest), Times.Once);
+        Assert.True(result);
         _magicLinkRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<AuthMagicLink>()), Times.Once);
         _emailSenderMock.Verify(x => x.SendMagicLinkAsync(email, It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task CreateGuestWithTokenAsync_ShouldCreateGuestUserAndReturnToken()
+    {
+        var displayName = "TestGuest";
+        _timeProviderMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
+
+        var result = await _authService.CreateGuestWithTokenAsync(displayName);
+
+        Assert.NotNull(result.User);
+        Assert.True(result.User.IsGuest);
+        Assert.Equal(displayName, result.User.DisplayName);
+        Assert.NotNull(result.Token);
+        Assert.NotEmpty(result.Token);
+        _userRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<User>()), Times.Once);
     }
 }
