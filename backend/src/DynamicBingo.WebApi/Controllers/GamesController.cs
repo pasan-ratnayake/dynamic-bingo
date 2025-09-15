@@ -19,9 +19,12 @@ public class GamesController : ControllerBase
     }
 
     [HttpGet("ongoing")]
-    public async Task<ActionResult<List<Game>>> GetOngoingGames([FromQuery] string userId)
+    public async Task<ActionResult<List<Game>>> GetOngoingGames([FromQuery] string? userId)
     {
-        if (string.IsNullOrEmpty(userId)) return BadRequest("UserId is required");
+        if (string.IsNullOrEmpty(userId)) 
+        {
+            return Ok(new List<Game>());
+        }
         
         var games = await _gameRepository.GetOngoingGamesForUserAsync(Guid.Parse(userId));
         return Ok(games);

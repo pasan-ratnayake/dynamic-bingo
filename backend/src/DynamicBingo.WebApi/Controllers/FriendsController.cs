@@ -17,9 +17,12 @@ public class FriendsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<Friendship>>> GetFriends([FromQuery] string userId)
+    public async Task<ActionResult<List<Friendship>>> GetFriends([FromQuery] string? userId)
     {
-        if (string.IsNullOrEmpty(userId)) return BadRequest("UserId is required");
+        if (string.IsNullOrEmpty(userId)) 
+        {
+            return Ok(new List<Friendship>());
+        }
         
         var friendships = await _friendshipRepository.GetFriendshipsForUserAsync(Guid.Parse(userId));
         return Ok(friendships);
