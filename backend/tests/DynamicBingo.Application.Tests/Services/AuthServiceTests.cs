@@ -31,6 +31,10 @@ public class AuthServiceTests
     public async Task CreateGuestAsync_ShouldCreateGuestUser()
     {
         var displayName = "TestGuest";
+        var expectedUser = User.CreateGuest(displayName);
+        
+        _userRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<User>()))
+            .ReturnsAsync(expectedUser);
         _timeProviderMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
         var result = await _authService.CreateGuestAsync(displayName);
@@ -45,8 +49,12 @@ public class AuthServiceTests
     public async Task SendMagicLinkAsync_WithNewEmail_ShouldCreateUserAndSendLink()
     {
         var email = "test@example.com";
+        var newUser = User.CreateRegistered(email, "test");
+        
         _userRepositoryMock.Setup(x => x.GetByEmailAsync(email))
             .ReturnsAsync((User?)null);
+        _userRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<User>()))
+            .ReturnsAsync(newUser);
         _timeProviderMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
         await _authService.SendMagicLinkAsync(email);
@@ -132,6 +140,10 @@ public class AuthServiceTests
     public async Task CreateGuestWithTokenAsync_ShouldCreateGuestUserAndReturnToken()
     {
         var displayName = "TestGuest";
+        var expectedUser = User.CreateGuest(displayName);
+        
+        _userRepositoryMock.Setup(x => x.CreateAsync(It.IsAny<User>()))
+            .ReturnsAsync(expectedUser);
         _timeProviderMock.Setup(x => x.UtcNow).Returns(DateTime.UtcNow);
 
         var result = await _authService.CreateGuestWithTokenAsync(displayName);

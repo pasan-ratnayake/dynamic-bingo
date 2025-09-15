@@ -65,7 +65,10 @@ public class GameEngineServiceTests
     {
         var gameId = Guid.NewGuid();
         var playerId = Guid.NewGuid();
+        var opponentId = Guid.NewGuid();
         var game = Game.Create("BINGO", playerId, FillMode.Sequential, StarterChoice.Creator);
+        game.AddOpponent(opponentId);
+        game.Start();
         game.End(GameEndReason.Win);
 
         _gameRepositoryMock.Setup(x => x.GetByIdAsync(gameId))
