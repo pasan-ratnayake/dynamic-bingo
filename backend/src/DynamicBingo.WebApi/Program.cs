@@ -4,6 +4,8 @@ using DynamicBingo.Infrastructure.Data;
 using DynamicBingo.Infrastructure.Repositories;
 using DynamicBingo.Infrastructure.Services;
 using DynamicBingo.WebApi.Hubs;
+using DynamicBingo.WebApi.Authentication;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,7 +36,13 @@ builder.Services.AddScoped<IRealtimeTransport, SignalRRealtimeTransport>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<GameEngineService>();
 
-builder.Services.AddSignalR();
+builder.Services.AddAuthentication("Bearer")
+    .AddScheme<AuthenticationSchemeOptions, SimpleAuthenticationHandler>("Bearer", options => { });
+
+builder.Services.AddSignalR(options =>
+{
+    options.EnableDetailedErrors = true;
+});
 
 builder.Services.AddCors(options =>
 {
@@ -65,6 +73,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
