@@ -168,8 +168,12 @@ class SignalRService {
     fillMode: string;
     starterChoice: string;
   }): Promise<void> {
-    if (!this.lobbyConnection || this.lobbyConnection.state !== 'Connected') {
-      throw new Error('Not connected to lobby');
+    if (!this.lobbyConnection) {
+      throw new Error('Lobby connection not initialized');
+    }
+    if (this.lobbyConnection.state !== 'Connected') {
+      console.log('Connection state:', this.lobbyConnection.state);
+      throw new Error(`Not connected to lobby. Current state: ${this.lobbyConnection.state}`);
     }
     await this.lobbyConnection.invoke('CreateOpenChallenge', challenge);
   }
