@@ -17,7 +17,9 @@ class SignalRService {
     
     this.lobbyConnection = new HubConnectionBuilder()
       .withUrl(`${API_BASE_URL}/hubs/lobby`, {
-        accessTokenFactory: () => token || ''
+        headers: {
+          'Authorization': `Bearer ${token || ''}`
+        }
       })
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
@@ -44,7 +46,9 @@ class SignalRService {
     
     this.gameConnection = new HubConnectionBuilder()
       .withUrl(`${API_BASE_URL}/hubs/game`, {
-        accessTokenFactory: () => token || ''
+        headers: {
+          'Authorization': `Bearer ${token || ''}`
+        }
       })
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
