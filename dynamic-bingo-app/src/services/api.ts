@@ -6,6 +6,7 @@ class ApiService {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
+    console.log('API Request URL:', url, 'Base:', API_BASE_URL, 'Endpoint:', endpoint);
     
     const config: RequestInit = {
       headers: {
