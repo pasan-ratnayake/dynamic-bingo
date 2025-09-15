@@ -46,21 +46,14 @@ public class DbSeeder
         );
         _context.OpenChallenges.Add(challenge);
 
-        var game = Game.Create(
-            "HELLO",
-            user1.Id,
-            user2.Id,
-            new Domain.ValueObjects.GameSettings
-            {
-                FillMode = FillMode.Random,
-                StarterChoice = StarterChoice.Creator
-            }
-        );
+        var game = Game.Create("HELLO", user1.Id, FillMode.Random, StarterChoice.Creator);
+        game.AddOpponent(user2.Id);
+        game.Start();
 
         _context.Games.Add(game);
 
-        var board1 = Board.Create(game.Id, user1.Id, FillMode.Sequential);
-        var board2 = Board.Create(game.Id, user2.Id, FillMode.Sequential);
+        var board1 = Board.Create(game.Id, user1.Id, FillMode.Sequential, 5);
+        var board2 = Board.Create(game.Id, user2.Id, FillMode.Sequential, 5);
         
         _context.Boards.AddRange(board1, board2);
 
