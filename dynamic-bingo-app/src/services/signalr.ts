@@ -13,9 +13,12 @@ class SignalRService {
     }
 
     const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const token = localStorage.getItem('auth_token');
     
     this.lobbyConnection = new HubConnectionBuilder()
-      .withUrl(`${API_BASE_URL}/hubs/lobby`)
+      .withUrl(`${API_BASE_URL}/hubs/lobby`, {
+        accessTokenFactory: () => token || ''
+      })
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
@@ -37,9 +40,12 @@ class SignalRService {
     }
 
     const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const token = localStorage.getItem('auth_token');
     
     this.gameConnection = new HubConnectionBuilder()
-      .withUrl(`${API_BASE_URL}/hubs/game`)
+      .withUrl(`${API_BASE_URL}/hubs/game`, {
+        accessTokenFactory: () => token || ''
+      })
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
