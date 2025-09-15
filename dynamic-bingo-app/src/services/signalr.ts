@@ -9,11 +9,14 @@ class SignalRService {
 
   async connectToLobby(): Promise<void> {
     if (this.lobbyConnection?.state === 'Connected') {
+      console.log('Already connected to lobby hub');
       return;
     }
 
     const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     const token = localStorage.getItem('auth-token');
+    
+    console.log('Creating lobby connection with token:', token ? 'present' : 'missing');
     
     this.lobbyConnection = new HubConnectionBuilder()
       .withUrl(`${API_BASE_URL}/hubs/lobby`, {
@@ -29,9 +32,10 @@ class SignalRService {
     
     try {
       await this.lobbyConnection.start();
-      console.log('Connected to lobby hub');
+      console.log('Connected to lobby hub, state:', this.lobbyConnection.state);
     } catch (error) {
       console.error('Error connecting to lobby hub:', error);
+      this.lobbyConnection = null;
       throw error;
     }
   }
@@ -168,13 +172,23 @@ class SignalRService {
     fillMode: string;
     starterChoice: string;
   }): Promise<void> {
+    console.log('Creating challenge, connection state:', this.lobbyConnection?.state || 'null');
+    
     if (!this.lobbyConnection) {
-      throw new Error('Lobby connection not initialized');
+      console.log('Lobby connection is null, attempting to reconnect...');
+      await this.connectToLobby();
     }
+    
+    if (!this.lobbyConnection) {
+      throw new Error('Failed to initialize lobby connection');
+    }
+    
     if (this.lobbyConnection.state !== 'Connected') {
       console.log('Connection state:', this.lobbyConnection.state);
       throw new Error(`Not connected to lobby. Current state: ${this.lobbyConnection.state}`);
     }
+    
+    console.log('Invoking CreateOpenChallenge with:', challenge);
     await this.lobbyConnection.invoke('CreateOpenChallenge', challenge);
   }
 
