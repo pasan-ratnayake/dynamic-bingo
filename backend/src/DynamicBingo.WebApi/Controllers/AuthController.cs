@@ -45,38 +45,6 @@ public class AuthController : ControllerBase
         });
     }
 
-    [HttpPost("guests")]
-    public async Task<IActionResult> CreateGuest([FromBody] CreateGuestRequest request)
-    {
-        try
-        {
-            var user = await _authService.CreateGuestAsync(request.DisplayName);
-            return Ok(new
-            {
-                user.Id,
-                user.DisplayName,
-                user.IsGuest
-            });
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [HttpPost("guests/convert")]
-    public async Task<IActionResult> ConvertGuest([FromBody] ConvertGuestRequest request)
-    {
-        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
-        var userAgent = HttpContext.Request.Headers.UserAgent.ToString();
-        
-        var success = await _authService.ConvertGuestToRegisteredAsync(request.GuestId, request.Email, ipAddress, userAgent);
-        
-        if (!success)
-            return BadRequest("Unable to convert guest account");
-            
-        return NoContent();
-    }
 
     [HttpPost("guests/convert/complete")]
     public async Task<IActionResult> CompleteGuestConversion([FromBody] CompleteGuestConversionRequest request)
@@ -98,6 +66,4 @@ public class AuthController : ControllerBase
 
 public record SendMagicLinkRequest(string Email);
 public record ConsumeMagicLinkRequest(string Token);
-public record CreateGuestRequest(string DisplayName);
-public record ConvertGuestRequest(Guid GuestId, string Email);
 public record CompleteGuestConversionRequest(string Token, string Email);

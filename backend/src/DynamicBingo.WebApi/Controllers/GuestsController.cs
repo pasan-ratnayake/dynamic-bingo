@@ -47,7 +47,7 @@ public class GuestsController : ControllerBase
     {
         try
         {
-            await _authService.RequestMagicLinkAsync(request.Email);
+            await _authService.SendMagicLinkAsync(request.Email);
             return Ok();
         }
         catch (Exception ex)
