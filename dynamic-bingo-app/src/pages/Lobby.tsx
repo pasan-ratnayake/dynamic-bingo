@@ -129,7 +129,7 @@ export function Lobby() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-bold text-gray-800">Dynamic Bingo Lobby</h1>
-            <p className="text-gray-600">Welcome back, {user.displayName}!</p>
+            <p className="text-gray-600">Welcome back, {user?.displayName || 'Player'}!</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => navigate('/profile')}>
@@ -260,7 +260,7 @@ export function Lobby() {
                         </div>
                         <Button 
                           onClick={() => handleAcceptChallenge(challenge.id)}
-                          disabled={challenge.creatorId === user.id}
+                          disabled={challenge.creatorId === user?.id}
                         >
                           Accept
                         </Button>
@@ -298,7 +298,7 @@ export function Lobby() {
                             </Badge>
                           </div>
                         </div>
-                        {onlineUser.id !== user.id && !isFriend(onlineUser.id) && (
+                        {onlineUser.id !== user?.id && !isFriend(onlineUser.id) && (
                           <Button 
                             size="sm" 
                             variant="outline"
@@ -315,7 +315,7 @@ export function Lobby() {
                     {friends
                       .filter(f => f.status === 'Accepted')
                       .map((friendship) => {
-                        const friend = friendship.userAId === user.id ? friendship.userB : friendship.userA;
+                        const friend = friendship.userAId === user?.id ? friendship.userB : friendship.userA;
                         return (
                           <div key={friendship.id} className="flex items-center justify-between p-2 border rounded">
                             <div className="flex items-center gap-2">
