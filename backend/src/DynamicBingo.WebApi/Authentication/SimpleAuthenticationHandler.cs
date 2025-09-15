@@ -16,13 +16,23 @@ public class SimpleAuthenticationHandler : AuthenticationHandler<AuthenticationS
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        string? token = null;
+        
         var authHeader = Request.Headers.Authorization.FirstOrDefault();
-        if (authHeader == null || !authHeader.StartsWith("Bearer "))
+        if (authHeader != null && authHeader.StartsWith("Bearer "))
+        {
+            token = authHeader.Substring("Bearer ".Length).Trim();
+        }
+        
+        if (string.IsNullOrEmpty(token))
+        {
+            token = Request.Query["access_token"].FirstOrDefault();
+        }
+
+        if (string.IsNullOrEmpty(token))
         {
             return Task.FromResult(AuthenticateResult.NoResult());
         }
-
-        var token = authHeader.Substring("Bearer ".Length).Trim();
         
         try
         {

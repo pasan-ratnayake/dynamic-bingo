@@ -20,6 +20,7 @@ class SignalRService {
     
     this.lobbyConnection = new HubConnectionBuilder()
       .withUrl(`${API_BASE_URL}/hubs/lobby`, {
+        accessTokenFactory: () => token || '',
         headers: {
           'Authorization': `Bearer ${token || ''}`
         }
@@ -50,6 +51,7 @@ class SignalRService {
     
     this.gameConnection = new HubConnectionBuilder()
       .withUrl(`${API_BASE_URL}/hubs/game`, {
+        accessTokenFactory: () => token || '',
         headers: {
           'Authorization': `Bearer ${token || ''}`
         }
