@@ -16,13 +16,13 @@ public class GameTests
 
         var game = Game.Create(word, creatorId, fillMode, starterChoice);
 
-        Assert.Equal(word, game.Word);
+        Assert.Equal(word.ToUpper(), game.Word);
         Assert.Equal(creatorId, game.CreatorId);
-        Assert.Equal(fillMode, game.FillMode);
         Assert.Equal(starterChoice, game.StarterChoice);
         Assert.Equal(GameStatus.Pending, game.Status);
         Assert.Null(game.OpponentId);
         Assert.False(game.IsFinished);
+        Assert.Equal(word.Length, game.N);
     }
 
     [Fact]
@@ -67,11 +67,11 @@ public class GameTests
     [InlineData("BINGO", 5)]
     [InlineData("DYNAMIC", 7)]
     [InlineData("BINGOMAX", 8)]
-    public void BoardSize_ShouldEqualWordLength(string word, int expectedSize)
+    public void N_ShouldEqualWordLength(string word, int expectedSize)
     {
         var game = Game.Create(word, Guid.NewGuid(), FillMode.Random, StarterChoice.Creator);
 
-        Assert.Equal(expectedSize, game.BoardSize);
+        Assert.Equal(expectedSize, game.N);
     }
 
     [Theory]

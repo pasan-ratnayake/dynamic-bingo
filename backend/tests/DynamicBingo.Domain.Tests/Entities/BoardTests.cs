@@ -11,18 +11,25 @@ public class BoardTests
     {
         var gameId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var boardSize = 5;
+        var n = 5;
 
-        var board = Board.Create(gameId, userId, boardSize, FillMode.Sequential);
+        var board = Board.Create(gameId, userId, FillMode.Sequential, n);
 
         Assert.Equal(gameId, board.GameId);
         Assert.Equal(userId, board.UserId);
         Assert.Equal(FillMode.Sequential, board.FillMode);
-        Assert.Equal(25, board.Layout.Length);
         
-        for (int i = 0; i < 25; i++)
+        var layout = board.GetLayout();
+        Assert.Equal(n, layout.GetLength(0));
+        Assert.Equal(n, layout.GetLength(1));
+        
+        var number = 1;
+        for (int row = 0; row < n; row++)
         {
-            Assert.Equal(i + 1, board.Layout[i]);
+            for (int col = 0; col < n; col++)
+            {
+                Assert.Equal(number++, layout[row, col]);
+            }
         }
     }
 
@@ -31,13 +38,25 @@ public class BoardTests
     {
         var gameId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var boardSize = 5;
+        var n = 5;
 
-        var board = Board.Create(gameId, userId, boardSize, FillMode.Random);
+        var board = Board.Create(gameId, userId, FillMode.Random, n);
 
-        Assert.Equal(25, board.Layout.Length);
-        Assert.True(board.Layout.All(n => n >= 1 && n <= 25));
-        Assert.Equal(25, board.Layout.Distinct().Count());
+        var layout = board.GetLayout();
+        Assert.Equal(n, layout.GetLength(0));
+        Assert.Equal(n, layout.GetLength(1));
+        
+        var numbers = new HashSet<int>();
+        for (int row = 0; row < n; row++)
+        {
+            for (int col = 0; col < n; col++)
+            {
+                var number = layout[row, col];
+                Assert.True(number >= 1 && number <= n * n);
+                Assert.True(numbers.Add(number), $"Duplicate number {number} found");
+            }
+        }
+        Assert.Equal(n * n, numbers.Count);
     }
 
     [Fact]
@@ -45,50 +64,69 @@ public class BoardTests
     {
         var gameId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var boardSize = 4;
+        var n = 4;
 
-        var board = Board.Create(gameId, userId, boardSize, FillMode.Manual);
+        var board = Board.Create(gameId, userId, FillMode.Manual, n);
 
-        Assert.Equal(16, board.Layout.Length);
-        Assert.True(board.Layout.All(n => n == 0));
+        var layout = board.GetLayout();
+        Assert.Equal(n, layout.GetLength(0));
+        Assert.Equal(n, layout.GetLength(1));
+        
+        for (int row = 0; row < n; row++)
+        {
+            for (int col = 0; col < n; col++)
+            {
+                Assert.Equal(0, layout[row, col]);
+            }
+        }
     }
 
     [Fact]
     public void SetManualLayout_ShouldUpdateLayout()
     {
-        var board = Board.Create(Guid.NewGuid(), Guid.NewGuid(), 4, FillMode.Manual);
-        var newLayout = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+        var board = Board.Create(Guid.NewGuid(), Guid.NewGuid(), FillMode.Manual, 4);
+        var newLayout = new int[4, 4];
+        var number = 1;
+        for (int row = 0; row < 4; row++)
+        {
+            for (int col = 0; col < 4; col++)
+            {
+                newLayout[row, col] = number++;
+            }
+        }
 
         board.SetManualLayout(newLayout);
 
-        Assert.Equal(newLayout, board.Layout);
+        var layout = board.GetLayout();
+        for (int row = 0; row < 4; row++)
+        {
+            for (int col = 0; col < 4; col++)
+            {
+                Assert.Equal(newLayout[row, col], layout[row, col]);
+            }
+        }
     }
 
     [Fact]
-    public void SetManualLayout_WithInvalidLength_ShouldThrowException()
+    public void SetManualLayout_WithInvalidDimensions_ShouldThrowException()
     {
-        var board = Board.Create(Guid.NewGuid(), Guid.NewGuid(), 4, FillMode.Manual);
-        var invalidLayout = new int[] { 1, 2, 3 };
+        var board = Board.Create(Guid.NewGuid(), Guid.NewGuid(), FillMode.Manual, 4);
+        var invalidLayout = new int[3, 4]; // Wrong dimensions
 
         Assert.Throws<ArgumentException>(() => board.SetManualLayout(invalidLayout));
     }
 
     [Fact]
-    public void GetPosition_ShouldReturnCorrectRowAndColumn()
+    public void GetLayout_ShouldReturnCorrectLayout()
     {
-        var board = Board.Create(Guid.NewGuid(), Guid.NewGuid(), 5, FillMode.Sequential);
+        var board = Board.Create(Guid.NewGuid(), Guid.NewGuid(), FillMode.Sequential, 3);
 
-        var (row, col) = board.GetPosition(6);
+        var layout = board.GetLayout();
 
-        Assert.Equal(1, row);
-        Assert.Equal(0, col);
-    }
-
-    [Fact]
-    public void GetPosition_WithInvalidNumber_ShouldThrowException()
-    {
-        var board = Board.Create(Guid.NewGuid(), Guid.NewGuid(), 5, FillMode.Sequential);
-
-        Assert.Throws<ArgumentException>(() => board.GetPosition(26));
+        Assert.Equal(3, layout.GetLength(0));
+        Assert.Equal(3, layout.GetLength(1));
+        Assert.Equal(1, layout[0, 0]);
+        Assert.Equal(5, layout[1, 1]);
+        Assert.Equal(9, layout[2, 2]);
     }
 }

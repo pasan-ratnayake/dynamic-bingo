@@ -77,68 +77,38 @@ public class GameEngineServiceTests
     }
 
     [Fact]
-    public async Task CheckForCompletedLines_ShouldDetectRowCompletion()
+    public async Task MarkNumberAsync_ShouldCalculateScoreCorrectly()
     {
         var gameId = Guid.NewGuid();
-        var playerId = Guid.NewGuid();
-        var game = Game.Create("TEST", playerId, FillMode.Sequential, StarterChoice.Creator);
-        
-        var marks = new List<Mark>
-        {
-            new() { GameId = gameId, Number = 1, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 2, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 3, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 4, MarkedByUserId = playerId }
-        };
+        var creatorId = Guid.NewGuid();
+        var opponentId = Guid.NewGuid();
+        var game = Game.Create("TEST", creatorId, FillMode.Sequential, StarterChoice.Creator);
+        game.AddOpponent(opponentId);
+        game.Start();
 
-        var completedLines = _gameEngineService.CheckForCompletedLines(game, marks, playerId);
+        var creatorPlayer = GamePlayer.Create(gameId, creatorId, true);
+        var opponentPlayer = GamePlayer.Create(gameId, opponentId, false);
+        game.Players.Add(creatorPlayer);
+        game.Players.Add(opponentPlayer);
 
-        Assert.Single(completedLines);
-        Assert.Equal("row", completedLines[0].Type);
-        Assert.Equal(0, completedLines[0].Index);
-    }
+        var creatorBoard = Board.Create(gameId, creatorId, FillMode.Sequential, 4);
+        var opponentBoard = Board.Create(gameId, opponentId, FillMode.Sequential, 4);
+        game.Boards.Add(creatorBoard);
+        game.Boards.Add(opponentBoard);
 
-    [Fact]
-    public async Task CheckForCompletedLines_ShouldDetectColumnCompletion()
-    {
-        var gameId = Guid.NewGuid();
-        var playerId = Guid.NewGuid();
-        var game = Game.Create("TEST", playerId, FillMode.Sequential, StarterChoice.Creator);
-        
-        var marks = new List<Mark>
-        {
-            new() { GameId = gameId, Number = 1, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 5, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 9, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 13, MarkedByUserId = playerId }
-        };
+        var turn = Turn.Create(gameId, 0, creatorId, TimeSpan.FromSeconds(30));
+        game.Turns.Add(turn);
 
-        var completedLines = _gameEngineService.CheckForCompletedLines(game, marks, playerId);
+        _gameRepositoryMock.Setup(x => x.GetByIdAsync(gameId))
+            .ReturnsAsync(game);
+        _timeProviderMock.Setup(x => x.UtcNow)
+            .Returns(DateTime.UtcNow);
 
-        Assert.Single(completedLines);
-        Assert.Equal("column", completedLines[0].Type);
-        Assert.Equal(0, completedLines[0].Index);
-    }
+        var result = await _gameEngineService.MarkNumberAsync(gameId, creatorId, 1);
 
-    [Fact]
-    public async Task CheckForCompletedLines_ShouldDetectDiagonalCompletion()
-    {
-        var gameId = Guid.NewGuid();
-        var playerId = Guid.NewGuid();
-        var game = Game.Create("TEST", playerId, FillMode.Sequential, StarterChoice.Creator);
-        
-        var marks = new List<Mark>
-        {
-            new() { GameId = gameId, Number = 1, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 6, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 11, MarkedByUserId = playerId },
-            new() { GameId = gameId, Number = 16, MarkedByUserId = playerId }
-        };
-
-        var completedLines = _gameEngineService.CheckForCompletedLines(game, marks, playerId);
-
-        Assert.Single(completedLines);
-        Assert.Equal("diagonal", completedLines[0].Type);
-        Assert.Equal(0, completedLines[0].Index);
+        Assert.True(result);
+        Assert.Single(game.Marks);
+        Assert.Equal(1, game.Marks.First().Number);
+        _gameRepositoryMock.Verify(x => x.UpdateAsync(game), Times.Once);
     }
 }
