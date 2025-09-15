@@ -26,7 +26,11 @@ public class SimpleAuthenticationHandler : AuthenticationHandler<AuthenticationS
         
         if (string.IsNullOrEmpty(token))
         {
-            token = Request.Query["access_token"].FirstOrDefault();
+            var queryToken = Request.Query["access_token"].FirstOrDefault();
+            if (!string.IsNullOrEmpty(queryToken))
+            {
+                token = Uri.UnescapeDataString(queryToken);
+            }
         }
 
         if (string.IsNullOrEmpty(token))
