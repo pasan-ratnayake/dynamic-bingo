@@ -53,8 +53,13 @@ public class GameEngineService
         var creatorPreviousScore = creatorPlayer.Score;
         var opponentPreviousScore = opponentPlayer.Score;
 
-        creatorPlayer.AddScore(creatorScore - creatorPreviousScore);
-        opponentPlayer.AddScore(opponentScore - opponentPreviousScore);
+        var creatorScoreDiff = creatorScore - creatorPreviousScore;
+        var opponentScoreDiff = opponentScore - opponentPreviousScore;
+        
+        if (creatorScoreDiff > 0)
+            creatorPlayer.AddScore(creatorScoreDiff);
+        if (opponentScoreDiff > 0)
+            opponentPlayer.AddScore(opponentScoreDiff);
 
         await _realtimeTransport.SendToGroupAsync($"game-{gameId}", "NumberMarked", new
         {
@@ -185,8 +190,13 @@ public class GameEngineService
         var creatorPreviousScore = creatorPlayer.Score;
         var opponentPreviousScore = opponentPlayer.Score;
 
-        creatorPlayer.AddScore(creatorScore - creatorPreviousScore);
-        opponentPlayer.AddScore(opponentScore - opponentPreviousScore);
+        var creatorScoreDiff = creatorScore - creatorPreviousScore;
+        var opponentScoreDiff = opponentScore - opponentPreviousScore;
+        
+        if (creatorScoreDiff > 0)
+            creatorPlayer.AddScore(creatorScoreDiff);
+        if (opponentScoreDiff > 0)
+            opponentPlayer.AddScore(opponentScoreDiff);
 
         if (creatorScore >= 5 || opponentScore >= 5)
         {

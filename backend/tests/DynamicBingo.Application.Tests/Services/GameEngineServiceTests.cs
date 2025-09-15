@@ -35,6 +35,19 @@ public class GameEngineServiceTests
         game.AddOpponent(opponentId);
         game.Start();
 
+        var creatorPlayer = GamePlayer.Create(gameId, playerId, true);
+        var opponentPlayer = GamePlayer.Create(gameId, opponentId, false);
+        game.Players.Add(creatorPlayer);
+        game.Players.Add(opponentPlayer);
+
+        var creatorBoard = Board.Create(gameId, playerId, FillMode.Sequential, 5);
+        var opponentBoard = Board.Create(gameId, opponentId, FillMode.Sequential, 5);
+        game.Boards.Add(creatorBoard);
+        game.Boards.Add(opponentBoard);
+
+        var turn = Turn.Create(gameId, 0, playerId, TimeSpan.FromSeconds(30));
+        game.Turns.Add(turn);
+
         _gameRepositoryMock.Setup(x => x.GetByIdAsync(gameId))
             .ReturnsAsync(game);
         _timeProviderMock.Setup(x => x.UtcNow)
