@@ -52,7 +52,10 @@ public class OpenChallenge
 
         IsActive = false;
 
-        return Game.Create(Word, CreatorId, FillMode, StarterChoice);
+        var game = Game.Create(Word, CreatorId, FillMode, StarterChoice);
+        game.AddOpponent(opponentId);
+        
+        return game;
     }
 
     private static void ValidateWord(string word)
