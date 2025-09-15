@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,7 +32,7 @@ export function Lobby() {
       try {
         await signalRService.connectToLobby();
         
-        const [users, challenges, friendsList] = await Promise.all([
+        const [users, , friendsList] = await Promise.all([
           apiService.getLobbyUsers(),
           apiService.getOngoingGames(),
           apiService.getFriends()
