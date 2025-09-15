@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using DynamicBingo.Application.Interfaces;
 using DynamicBingo.Application.Services;
 using DynamicBingo.Domain.Entities;
@@ -6,6 +7,7 @@ using DynamicBingo.Domain.Enums;
 
 namespace DynamicBingo.WebApi.Hubs;
 
+[Authorize]
 public class GameHub : Hub
 {
     private readonly IGameRepository _gameRepository;

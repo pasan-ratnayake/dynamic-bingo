@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.Authorization;
 using DynamicBingo.Application.Interfaces;
 using DynamicBingo.Domain.Entities;
 using DynamicBingo.Domain.Enums;
 
 namespace DynamicBingo.WebApi.Hubs;
 
+[Authorize]
 public class LobbyHub : Hub
 {
     private readonly IUserRepository _userRepository;

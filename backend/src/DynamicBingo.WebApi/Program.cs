@@ -44,6 +44,8 @@ builder.Services.AddSignalR(options =>
     options.EnableDetailedErrors = true;
 });
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -77,7 +79,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<DynamicBingo.WebApi.Hubs.LobbyHub>("/hubs/lobby");
-app.MapHub<DynamicBingo.WebApi.Hubs.GameHub>("/hubs/game");
+app.MapHub<DynamicBingo.WebApi.Hubs.LobbyHub>("/hubs/lobby").RequireAuthorization();
+app.MapHub<DynamicBingo.WebApi.Hubs.GameHub>("/hubs/game").RequireAuthorization();
 
 app.Run();
