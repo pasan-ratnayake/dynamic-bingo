@@ -20,6 +20,7 @@ export function Lobby() {
   const { onlineUsers, openChallenges, friends, presence } = useLobbyStore();
   const [isCreateChallengeOpen, setIsCreateChallengeOpen] = useState(false);
   const [joinCode, setJoinCode] = useState('');
+  const [isConnected, setIsConnected] = useState(false);
   const [challengeForm, setChallengeForm] = useState({
     word: '',
     visibility: 'Public',
@@ -31,6 +32,7 @@ export function Lobby() {
     const initializeLobby = async () => {
       try {
         await signalRService.connectToLobby();
+        setIsConnected(true);
         
         const [users, , friendsList] = await Promise.all([
           apiService.getLobbyUsers(),
@@ -42,6 +44,7 @@ export function Lobby() {
         useLobbyStore.getState().setFriends(friendsList);
       } catch (error) {
         console.error('Error initializing lobby:', error);
+        setIsConnected(false);
       }
     };
 
@@ -153,9 +156,9 @@ export function Lobby() {
                 <div className="flex gap-4">
                   <Dialog open={isCreateChallengeOpen} onOpenChange={setIsCreateChallengeOpen}>
                     <DialogTrigger asChild>
-                      <Button className="flex-1">
+                      <Button className="flex-1" disabled={!isConnected}>
                         <Plus className="w-4 h-4 mr-2" />
-                        Create Challenge
+                        {isConnected ? 'Create Challenge' : 'Connecting...'}
                       </Button>
                     </DialogTrigger>
                     <DialogContent>

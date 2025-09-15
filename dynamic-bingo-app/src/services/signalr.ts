@@ -164,27 +164,37 @@ class SignalRService {
     fillMode: string;
     starterChoice: string;
   }): Promise<void> {
-    if (!this.lobbyConnection) throw new Error('Not connected to lobby');
+    if (!this.lobbyConnection || this.lobbyConnection.state !== 'Connected') {
+      throw new Error('Not connected to lobby');
+    }
     await this.lobbyConnection.invoke('CreateOpenChallenge', challenge);
   }
 
   async cancelOpenChallenge(challengeId: string): Promise<void> {
-    if (!this.lobbyConnection) throw new Error('Not connected to lobby');
+    if (!this.lobbyConnection || this.lobbyConnection.state !== 'Connected') {
+      throw new Error('Not connected to lobby');
+    }
     await this.lobbyConnection.invoke('CancelOpenChallenge', challengeId);
   }
 
   async acceptChallenge(challengeId: string): Promise<{ gameId: string }> {
-    if (!this.lobbyConnection) throw new Error('Not connected to lobby');
+    if (!this.lobbyConnection || this.lobbyConnection.state !== 'Connected') {
+      throw new Error('Not connected to lobby');
+    }
     return await this.lobbyConnection.invoke('AcceptChallenge', challengeId);
   }
 
   async sendFriendRequest(targetUserId: string): Promise<void> {
-    if (!this.lobbyConnection) throw new Error('Not connected to lobby');
+    if (!this.lobbyConnection || this.lobbyConnection.state !== 'Connected') {
+      throw new Error('Not connected to lobby');
+    }
     await this.lobbyConnection.invoke('SendFriendRequest', targetUserId);
   }
 
   async respondFriendRequest(requestId: string, accept: boolean): Promise<void> {
-    if (!this.lobbyConnection) throw new Error('Not connected to lobby');
+    if (!this.lobbyConnection || this.lobbyConnection.state !== 'Connected') {
+      throw new Error('Not connected to lobby');
+    }
     await this.lobbyConnection.invoke('RespondFriendRequest', requestId, accept);
   }
 
