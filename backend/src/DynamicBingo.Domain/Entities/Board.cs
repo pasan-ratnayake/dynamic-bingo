@@ -25,12 +25,14 @@ public class Board
             _ => throw new ArgumentException("Invalid fill mode")
         };
 
+        var flatArray = FlattenArray(layout);
+        
         return new Board
         {
             Id = Guid.NewGuid(),
             GameId = gameId,
             UserId = userId,
-            LayoutJson = System.Text.Json.JsonSerializer.Serialize(layout),
+            LayoutJson = System.Text.Json.JsonSerializer.Serialize(flatArray),
             FillMode = fillMode
         };
     }
@@ -45,12 +47,14 @@ public class Board
             throw new ArgumentException("Layout must be square");
 
         ValidateLayout(layout, n);
-        LayoutJson = System.Text.Json.JsonSerializer.Serialize(layout);
+        var flatArray = FlattenArray(layout);
+        LayoutJson = System.Text.Json.JsonSerializer.Serialize(flatArray);
     }
 
     public int[,] GetLayout()
     {
-        return System.Text.Json.JsonSerializer.Deserialize<int[,]>(LayoutJson)!;
+        var flatArray = System.Text.Json.JsonSerializer.Deserialize<int[]>(LayoutJson)!;
+        return UnflattenArray(flatArray);
     }
 
     private static int[,] GenerateSequentialLayout(int n)
@@ -113,5 +117,38 @@ public class Board
 
         if (!expectedNumbers.SetEquals(actualNumbers))
             throw new ArgumentException("Layout must contain all numbers from 1 to N²");
+    }
+
+    private static int[] FlattenArray(int[,] array)
+    {
+        var rows = array.GetLength(0);
+        var cols = array.GetLength(1);
+        var flat = new int[rows * cols];
+        
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < cols; j++)
+            {
+                flat[i * cols + j] = array[i, j];
+            }
+        }
+        
+        return flat;
+    }
+
+    private static int[,] UnflattenArray(int[] flatArray)
+    {
+        var n = (int)Math.Sqrt(flatArray.Length);
+        var array = new int[n, n];
+        
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                array[i, j] = flatArray[i * n + j];
+            }
+        }
+        
+        return array;
     }
 }
