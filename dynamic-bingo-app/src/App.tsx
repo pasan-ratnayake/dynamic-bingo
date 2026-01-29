@@ -16,8 +16,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 function App() {
+  // Match Vite base so client-side routes work on GitHub Pages (e.g. /repo-name/)
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, "") || undefined;
   return (
-    <Router>
+    <Router basename={basename}>
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/auth" element={<MagicLinkAuth />} />

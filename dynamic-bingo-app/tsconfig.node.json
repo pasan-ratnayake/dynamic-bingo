@@ -3,14 +3,13 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
     "target": "ES2022",
     "lib": ["ES2023"],
+    "types": ["node"],
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
+    /* Node config (vite.config.ts runs in Node) */
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
     "noEmit": true,
 
     /* Linting */
