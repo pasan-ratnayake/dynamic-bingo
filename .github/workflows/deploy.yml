@@ -30,12 +30,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
           cache-dependency-path: dynamic-bingo-app/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build application
         run: npm run build
@@ -43,8 +43,7 @@ jobs:
           # Set base path for GitHub Pages
           # For project pages (e.g., username.github.io/repo-name): use '/repo-name/'
           # For user/organization pages (e.g., username.github.io): use '/'
-          # Default: '/' - change this if your repo is a project page
-          VITE_BASE_PATH: '/'
+          VITE_BASE_PATH: "/${{ github.event.repository.name }}/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -57,7 +56,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dynamic-bingo-app/dist'
+          path: "./dynamic-bingo-app/dist"
 
   deploy:
     environment:
