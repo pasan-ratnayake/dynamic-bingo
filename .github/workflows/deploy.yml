@@ -27,8 +27,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -40,7 +40,7 @@ jobs:
           # For project pages (e.g., username.github.io/repo-name): use '/repo-name/'
           # For user/organization pages (e.g., username.github.io): use '/'
           # Default: '/' - change this if your repo is a project page
-          VITE_BASE_PATH: '/'
+          VITE_BASE_PATH: "/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -53,7 +53,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: "./dist"
 
   deploy:
     environment:
