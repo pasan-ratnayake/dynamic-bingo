@@ -31,29 +31,31 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
+        working-directory: ./dynamic-bingo-app
 
       - name: Build application
         run: npm run build
+        working-directory: ./dynamic-bingo-app
         env:
           # Set base path for GitHub Pages
           # For project pages (e.g., username.github.io/repo-name): use '/repo-name/'
           # For user/organization pages (e.g., username.github.io): use '/'
           # Default: '/' - change this if your repo is a project page
-          VITE_BASE_PATH: "/"
+          VITE_BASE_PATH: "/${{ github.event.repository.name }}/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
       - name: Create 404.html for SPA routing
         run: |
-          cp dist/index.html dist/404.html
+          cp ./dynamic-bingo-app/dist/index.html ./dynamic-bingo-app/dist/404.html
           echo "Created 404.html for GitHub Pages SPA routing support"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "./dist"
+          path: "./dynamic-bingo-app/dist"
 
   deploy:
     environment:
