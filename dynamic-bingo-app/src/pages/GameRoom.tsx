@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,9 +26,9 @@ export function GameRoom() {
     timeRemaining 
   } = useGameStore();
   
-  const [selectedCell, setSelectedCell] = useState<number | null>(null);
+  const [selectedCell] = useState<number | null>(null);
   const [showGameEnd, setShowGameEnd] = useState(false);
-  const [gameEndResult, setGameEndResult] = useState<{
+  const [gameEndResult] = useState<{
     result: 'Win' | 'Lose' | 'Draw';
     reason?: string;
   } | null>(null);
@@ -78,16 +78,6 @@ export function GameRoom() {
       setRematchOffered(true);
     } catch (error) {
       console.error('Error offering rematch:', error);
-    }
-  };
-
-  const handleAcceptRematch = async () => {
-    if (!gameId) return;
-    
-    try {
-      await signalRService.acceptRematch(gameId);
-    } catch (error) {
-      console.error('Error accepting rematch:', error);
     }
   };
 

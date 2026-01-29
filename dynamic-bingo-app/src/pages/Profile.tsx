@@ -158,7 +158,7 @@ export function Profile() {
                     required
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    1-30 characters. Allowed: letters, numbers, _ - $ @ ^ . ( ) [ ] {{ }} !
+                    1-30 characters. Allowed: letters, numbers, _ - $ @ ^ . ( ) [ ] {'{}'} !
                   </p>
                 </div>
 
