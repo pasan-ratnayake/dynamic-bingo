@@ -20,6 +20,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: dynamic-bingo-app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,16 +36,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./dynamic-bingo-app
 
       - name: Build application
         run: npm run build
-        working-directory: ./dynamic-bingo-app
         env:
           # Set base path for GitHub Pages
           # For project pages (e.g., username.github.io/repo-name): use '/repo-name/'
           # For user/organization pages (e.g., username.github.io): use '/'
-          # Default: '/' - change this if your repo is a project page
           VITE_BASE_PATH: "/${{ github.event.repository.name }}/"
 
       - name: Setup Pages
@@ -50,7 +50,7 @@ jobs:
 
       - name: Create 404.html for SPA routing
         run: |
-          cp ./dynamic-bingo-app/dist/index.html ./dynamic-bingo-app/dist/404.html
+          cp dist/index.html dist/404.html
           echo "Created 404.html for GitHub Pages SPA routing support"
 
       - name: Upload artifact
